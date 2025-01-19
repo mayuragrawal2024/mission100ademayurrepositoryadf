@@ -142,7 +142,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "Update dbo.branch\nset create_timestamp = '@{activity('Lookup2').output.firstRow.latestdate_timestamp}'\nselect 1 as abcd",
+							"value": "Update dbo.Agent\nset create_timestamp = '@{activity('Lookup2').output.firstRow.latestdate_timestamp}'\nselect 1 as abcd",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
