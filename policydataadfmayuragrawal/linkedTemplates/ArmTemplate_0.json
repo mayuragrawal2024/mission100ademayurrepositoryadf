@@ -55,7 +55,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Generic_SQLDB_Dataset')]",
+			"name": "[concat(parameters('factoryName'), '/Agent_SQLDB_Dataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -66,7 +66,10 @@
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
-				"typeProperties": {}
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Agent"
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Azure_SQL_DB_LS')]"
@@ -164,7 +167,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select MAX(create_timestamp) as latestdate_timestamp  From [dbo].[Agent]",
+								"sqlReaderQuery": "Select MAX(create_timestamp) as latestdate_timestamp From [dbo].[Agent]",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -203,7 +206,10 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select * from Ado.Agent",
+								"sqlReaderQuery": {
+									"value": "Select * from dbo.Agent\nwhere create_timestamp >= '@{activity('Lookup1').output.firstRow.entrydate_timestamp}'\nAnd \ncreate_timestamp <= '@{activity('Lookup2').output.firstRow.latestdate_timestamp}'",
+									"type": "Expression"
+								},
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -228,7 +234,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "Generic_SQLDB_Dataset",
+								"referenceName": "Agent_SQLDB_Dataset",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -275,7 +281,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQLDB_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/Generic_SQLDB_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/Agent_SQLDB_Dataset')]",
 				"[concat(variables('factoryId'), '/datasets/Parquet_Agent_ALDS_Dataset')]"
 			]
 		},
