@@ -24,7 +24,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable1",
+						"referenceName": "Copy_BranchData_from_SQLDB",
 						"type": "DatasetReference"
 					}
 				]
