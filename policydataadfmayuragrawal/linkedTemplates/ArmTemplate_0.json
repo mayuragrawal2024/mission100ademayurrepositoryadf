@@ -125,32 +125,6 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Lookup1",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select MIN(create_timestamp) From [dbo].[Agent]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "SQLDB_Dataset",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
 						"name": "Lookup2",
 						"type": "Lookup",
 						"dependsOn": [],
@@ -179,7 +153,14 @@
 					{
 						"name": "Copy data1",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Lookup1",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -191,6 +172,10 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "Select * From\nAdo.branch\nWhere create_timestamp >= '@activity('Lookup1').output.firstRow[0]' And \ncreate_timestamp <= '@activity('Lookup2').output.firstRow[0]'",
+									"type": "Expression"
+								},
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -215,7 +200,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SQLDB_Dataset",
+								"referenceName": "Generic_SQLDB_Dataset",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -227,6 +212,39 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "Lookup1",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Lookup2",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "Select MIN(create_timestamp) From [dbo].[Agent]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SQLDB_Dataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
 					}
 				],
 				"policy": {
@@ -236,6 +254,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQLDB_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/Generic_SQLDB_Dataset')]",
 				"[concat(variables('factoryId'), '/datasets/Parquet_ADLS_Dataset')]"
 			]
 		},
