@@ -1,5 +1,5 @@
 {
-	"name": "SQLDB_DS",
+	"name": "SQLDB_Dataset",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Azure_SQL_DB_LS",

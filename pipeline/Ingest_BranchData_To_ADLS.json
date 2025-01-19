@@ -1,5 +1,5 @@
 {
-	"name": "Copy Branch Data from SQL DB to ADLS",
+	"name": "Ingest_BranchData_To_ADLS",
 	"properties": {
 		"activities": [
 			{
@@ -41,13 +41,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SQLDB_DS",
+						"referenceName": "SQLDB_Dataset",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ADLS_DS",
+						"referenceName": "ADLS_Dataset",
 						"type": "DatasetReference"
 					}
 				]
