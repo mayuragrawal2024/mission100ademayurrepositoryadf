@@ -80,7 +80,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy_BranchData_from_SQLDB')]",
+			"name": "[concat(parameters('factoryName'), '/SQLDB_DS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -101,7 +101,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Branch Data from SQL DB to ADLS')]",
+			"name": "[concat(parameters('factoryName'), '/Copy Branch Data from SQL DB to ADLS')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -145,7 +145,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "Copy_BranchData_from_SQLDB",
+								"referenceName": "SQLDB_DS",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -165,7 +165,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Copy_BranchData_from_SQLDB')]",
+				"[concat(variables('factoryId'), '/datasets/SQLDB_DS')]",
 				"[concat(variables('factoryId'), '/datasets/ADLS_DS')]"
 			]
 		}
