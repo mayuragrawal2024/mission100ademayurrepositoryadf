@@ -55,6 +55,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "Select * from Ado.Agent",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
