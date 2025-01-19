@@ -141,7 +141,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "Update Ado.branch\nset create_timestamp = '@{activity('Lookup2').output.firstRow.latestdate_timestamp}'",
+						"sqlReaderQuery": {
+							"value": "Update dbo.branch\nset create_timestamp = '@{activity('Lookup2').output.firstRow.latestdate_timestamp}'",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
