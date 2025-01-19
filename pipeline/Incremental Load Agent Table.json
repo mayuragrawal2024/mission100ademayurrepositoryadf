@@ -36,6 +36,12 @@
 						"dependencyConditions": [
 							"Completed"
 						]
+					},
+					{
+						"activity": "Lookup2",
+						"dependencyConditions": [
+							"Completed"
+						]
 					}
 				],
 				"policy": {
@@ -50,7 +56,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "Select * From\nAdo.branch\nWhere create_timestamp >= '@activity('Lookup1').output.firstRow[0]' And \ncreate_timestamp <= '@activity('Lookup2').output.firstRow[0]'",
+							"value": "Select * From\nAdo.branch\nWhere create_timestamp >= \n'activity('Lookup1').output.firstRow'\n\n",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -91,14 +97,7 @@
 			{
 				"name": "Lookup1",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Lookup2",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
