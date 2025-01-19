@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "Select MAX(create_timestamp) From [dbo].[Agent]",
+						"sqlReaderQuery": "Select MAX(create_timestamp) as latestdate_timestamp  From [dbo].[Agent]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -55,10 +55,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": {
-							"value": "Select * From\nAdo.branch\nWhere create_timestamp >= \n'activity('Lookup1').output.firstRow'\n\n",
-							"type": "Expression"
-						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -109,7 +105,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "Select MIN(create_timestamp) From [dbo].[Agent]",
+						"sqlReaderQuery": "Select MIN(create_timestamp) as entrydate_timestamp From [dbo].[Agent]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
