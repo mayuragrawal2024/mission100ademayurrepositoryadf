@@ -32,13 +32,13 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "Lookup2",
 						"dependencyConditions": [
 							"Completed"
 						]
 					},
 					{
-						"activity": "Lookup2",
+						"activity": "Lookup1",
 						"dependencyConditions": [
 							"Completed"
 						]
@@ -122,7 +122,7 @@
 						"referenceName": "DelimitedText1",
 						"type": "DatasetReference"
 					},
-					"firstRowOnly": false
+					"firstRowOnly": true
 				}
 			},
 			{
