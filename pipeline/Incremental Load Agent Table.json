@@ -85,7 +85,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet_ADLS_Dataset",
+						"referenceName": "Parquet_Agent_ALDS_Dataset",
 						"type": "DatasetReference"
 					}
 				]
