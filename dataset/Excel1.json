@@ -1,0 +1,20 @@
+{
+	"name": "Excel1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLS_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "HighWaterMark_Agent.txt",
+				"folderPath": "AgentData",
+				"fileSystem": "landing"
+			}
+		},
+		"schema": []
+	}
+}
