@@ -1,5 +1,5 @@
 {
-	"name": "Copy_BranchData_from_SQLDB",
+	"name": "SQLDB_DS",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Azure_SQL_DB_LS",
