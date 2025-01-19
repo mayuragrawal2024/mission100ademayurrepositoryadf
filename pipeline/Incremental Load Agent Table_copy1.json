@@ -56,7 +56,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "Select * from dbo.Agent\nwhere create_timestamp >= '@{activity('Lookup1').output.firstRow.entrydate_timestamp}'\nAnd \ncreate_timestamp <= '@{activity('Lookup2').output.firstRow.latestdate_timestamp}'",
+							"value": "Select * from dbo.Agent\nwhere create_timestamp >= '@{activity('Lookup1').output.firstRow.Prop_0}'\nAnd \ncreate_timestamp <= '@{activity('Lookup2').output.firstRow.latestdate_timestamp}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -148,7 +148,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "Update dbo.Agent\nset create_timestamp = '@{activity('Lookup1').output.firstRow.latestdate_timestamp}'\nselect 1 as abcd",
+							"value": "Select '@{activity('Lookup1').output.firstRow.latestdate_timestamp}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
