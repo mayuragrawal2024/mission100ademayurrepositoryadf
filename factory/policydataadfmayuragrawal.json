@@ -1,0 +1,9 @@
+{
+	"name": "policydataadfmayuragrawal",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "15e9e47c-6a5b-4738-af4b-af1e7c2249c7",
+		"tenantId": "f78ed3f8-3070-463c-9bf0-8d8b280523aa"
+	}
+}
