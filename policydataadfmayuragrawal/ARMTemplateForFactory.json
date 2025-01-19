@@ -45,7 +45,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select MAX(create_timestamp) From [dbo].[Agent]",
+								"sqlReaderQuery": "Select MAX(create_timestamp) as latestdate_timestamp  From [dbo].[Agent]",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -65,6 +65,12 @@
 								"dependencyConditions": [
 									"Completed"
 								]
+							},
+							{
+								"activity": "Lookup2",
+								"dependencyConditions": [
+									"Completed"
+								]
 							}
 						],
 						"policy": {
@@ -78,10 +84,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": {
-									"value": "Select * From\nAdo.branch\nWhere create_timestamp >= '@activity('Lookup1').output.firstRow[0]' And \ncreate_timestamp <= '@activity('Lookup2').output.firstRow[0]'",
-									"type": "Expression"
-								},
+								"sqlReaderQuery": "Select * from Ado.Agent",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -113,7 +116,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "Parquet_ADLS_Dataset",
+								"referenceName": "Parquet_Agent_ALDS_Dataset",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -122,14 +125,7 @@
 					{
 						"name": "Lookup1",
 						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "Lookup2",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -141,7 +137,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "Select MIN(create_timestamp) From [dbo].[Agent]",
+								"sqlReaderQuery": "Select MIN(create_timestamp) as entrydate_timestamp From [dbo].[Agent]",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -161,7 +157,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQLDB_Dataset')]",
 				"[concat(variables('factoryId'), '/datasets/Generic_SQLDB_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet_ADLS_Dataset')]"
+				"[concat(variables('factoryId'), '/datasets/Parquet_Agent_ALDS_Dataset')]"
 			]
 		},
 		{
@@ -266,6 +262,31 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"folderPath": "BranchData",
+						"fileSystem": "landing"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Parquet_Agent_ALDS_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "AgentData",
 						"fileSystem": "landing"
 					},
 					"compressionCodec": "snappy"
