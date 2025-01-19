@@ -55,6 +55,24 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Generic_SQLDB_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure_SQL_DB_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Azure_SQL_DB_LS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Parquet_ADLS_Dataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -176,11 +194,35 @@
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
-							"enableStaging": false
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
 						},
 						"inputs": [
 							{
 								"referenceName": "SQLDB_Dataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Parquet_ADLS_Dataset",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -193,7 +235,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQLDB_Dataset')]"
+				"[concat(variables('factoryId'), '/datasets/SQLDB_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/Parquet_ADLS_Dataset')]"
 			]
 		},
 		{
