@@ -1,0 +1,38 @@
+{
+	"name": "Incremental Load Claim Table",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Date from HW",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "Claim_HW",
+						"type": "DatasetReference"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
