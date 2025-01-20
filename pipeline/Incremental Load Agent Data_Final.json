@@ -1,11 +1,18 @@
 {
-	"name": "Incremental Load Agent Table_copy1",
+	"name": "Incremental Load Agent Data_Final",
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup2",
+				"name": "Get Lastupdated from Agent Table",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get Date from HW",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -28,19 +35,13 @@
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "Copy Agent Data to ALDS",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookup2",
+						"activity": "Get Lastupdated from Agent Table",
 						"dependencyConditions": [
-							"Completed"
-						]
-					},
-					{
-						"activity": "Lookup1",
-						"dependencyConditions": [
-							"Completed"
+							"Succeeded"
 						]
 					}
 				],
@@ -56,7 +57,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "Select * from dbo.Agent\nwhere create_timestamp >= '@{activity('Lookup1').output.firstRow.Prop_0}'\nAnd \ncreate_timestamp <= '@{activity('Lookup2').output.firstRow.latestdate_timestamp}'",
+							"value": "Select * from dbo.Agent\nwhere create_timestamp > '@{activity('Get Date from HW').output.firstRow.Prop_0}'\nAnd \ncreate_timestamp <= '@{activity('Get Lastupdated from Agent Table').output.firstRow.latestdate_timestamp}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -95,7 +96,7 @@
 				]
 			},
 			{
-				"name": "Lookup1",
+				"name": "Get Date from HW",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -119,11 +120,74 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "DelimitedText1",
+						"referenceName": "Agent_HW",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": true
 				}
+			},
+			{
+				"name": "Update HW",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy Agent Data to ALDS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "Select '@{activity('Get Lastupdated from Agent Table').output.firstRow.latestdate_timestamp}'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SQLDB_Dataset",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Agent_HW",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []

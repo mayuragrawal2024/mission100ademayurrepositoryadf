@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText1",
+	"name": "Agent_HW",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ADLS_LS",
