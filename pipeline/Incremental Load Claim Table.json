@@ -54,12 +54,12 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "Select MAX(create_timestamp) as latestdate_timestamp From [dbo].[Claim]",
+						"sqlReaderQuery": "Select MAX(LastUpdatedTimeStamp) as latestdate_timestamp From [dbo].[Claim]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "SQLDB_Dataset",
+						"referenceName": "Claim_SQLDB_Dataset",
 						"type": "DatasetReference"
 					}
 				}
@@ -87,7 +87,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "Select * from dbo.Agent\nwhere create_timestamp > '@{activity('Get Date from HW').output.firstRow.Prop_0}'\nAnd \ncreate_timestamp <= '@{activity('Get Lastupdated from Claim Table').output.firstRow.latestdate_timestamp}'",
+							"value": "Select * from dbo.Agent\nwhere LastUpdatedTimeStamp > '@{activity('Get Date from HW').output.firstRow.Prop_0}'\nAnd \nLastUpdatedTimeStamp <= '@{activity('Get Lastupdated from Claim Table').output.firstRow.latestdate_timestamp}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
