@@ -87,7 +87,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "Select * from dbo.Agent\nwhere LastUpdatedTimeStamp > '@{activity('Get Date from HW').output.firstRow.Prop_0}'\nAnd \nLastUpdatedTimeStamp <= '@{activity('Get Lastupdated from Claim Table').output.firstRow.latestdate_timestamp}'",
+							"value": "Select * from dbo.Claim\nwhere LastUpdatedTimeStamp > '@{activity('Get Date from HW').output.firstRow.Prop_0}'\nAnd \nLastUpdatedTimeStamp <= '@{activity('Get Lastupdated from Claim Table').output.firstRow.latestdate_timestamp}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
