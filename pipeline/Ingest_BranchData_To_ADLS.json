@@ -41,13 +41,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SQLDB_Dataset",
+						"referenceName": "Branch_SQLDB_Dataset",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet_ADLS_Dataset",
+						"referenceName": "Parquet_Branch_ADLS_Dataset",
 						"type": "DatasetReference"
 					}
 				]
