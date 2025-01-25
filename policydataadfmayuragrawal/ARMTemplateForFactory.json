@@ -492,14 +492,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SQLDB_Dataset",
+								"referenceName": "Branch_SQLDB_Dataset",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "Parquet_ADLS_Dataset",
+								"referenceName": "Parquet_Branch_ADLS_Dataset",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -512,8 +512,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQLDB_Dataset')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet_ADLS_Dataset')]"
+				"[concat(variables('factoryId'), '/datasets/Branch_SQLDB_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/Parquet_Branch_ADLS_Dataset')]"
 			]
 		},
 		{
@@ -603,6 +603,27 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Claim_SQLDB_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure_SQL_DB_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Claim"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Azure_SQL_DB_LS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -637,7 +658,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Parquet_ADLS_Dataset')]",
+			"name": "[concat(parameters('factoryName'), '/Parquet_Branch_ADLS_Dataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -676,6 +697,31 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"folderPath": "AgentData",
+						"fileSystem": "landing"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Parquet_Claim_ALDS_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "ClaimData",
 						"fileSystem": "landing"
 					},
 					"compressionCodec": "snappy"
@@ -738,7 +784,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Claim_SQLDB_Dataset')]",
+			"name": "[concat(parameters('factoryName'), '/Branch_SQLDB_Dataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -751,36 +797,11 @@
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "Claim"
+					"table": "Branch"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Azure_SQL_DB_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Parquet_Claim_ALDS_Dataset')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ADLS_LS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "ClaimData",
-						"fileSystem": "landing"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
 			]
 		}
 	]
