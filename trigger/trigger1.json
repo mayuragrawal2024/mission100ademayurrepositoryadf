@@ -4,18 +4,11 @@
 		"description": "qasdc",
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "Ingest_BranchData_To_ADLS",
-					"type": "PipelineReference"
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Minute",
+				"frequency": "Month",
 				"interval": 64,
 				"startTime": "2025-03-18T18:07:00",
 				"timeZone": "India Standard Time"
